@@ -1,0 +1,67 @@
+namespace info.foodways
+
+asset Lote identified by loteId {
+  o String loteId
+  o String loteNr
+  --> Industria industria
+  --> Carregamento[] carregamentos
+}
+
+asset Carregamento identified by cargId {
+  o String cargId
+  o DateTime inicio
+  o DateTime fim optional
+  --> Caminhoneiro caminhoneiro
+  --> Industria destino
+  --> Recebimento[] recebimentos
+}
+
+asset Recebimento identified by recId {
+  o String recId
+  o Double quantidade
+  o String unidadeMedida default = "l"
+  o DateTime recebidoEm
+  --> Propriedade origem
+}
+
+// concept Endereco {
+//   o String logradouro
+//   o String cidade
+//   o String estado
+//   o Double[] localizacao optional
+// }
+
+participant Propriedade identified by propId {
+  o String propId
+  o String nome
+  o String logradouro
+  o String cidade
+  o String estado
+}
+
+participant Industria identified by indId {
+  o String indId
+  o String razaoSocial
+  o String cnpj
+  o String logradouro
+  o String cidade
+  o String estado
+}
+
+participant Caminhoneiro identified by camId {
+  o String camId
+  o String nome
+  o String cnhNr
+  o String cnhEstado
+}
+
+transaction RealizarRecebimento {
+  --> Carregamento carregamento
+  --> Recebimento recebimento
+}
+
+event RecebimentoRealizado {
+  o String origem
+  o Double quantidade
+  o String unidadeMedida
+}

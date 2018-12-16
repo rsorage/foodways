@@ -1,0 +1,7 @@
+query selectCarregamentosByIndustria {
+    description: "Select all carregamentos"
+    statement:
+    	SELECT info.foodways.Carregamento
+  			WHERE (destino == _$destino)
+}
+

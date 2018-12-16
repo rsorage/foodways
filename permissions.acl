@@ -1,0 +1,71 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+rule EverybodyCanReadBatches {
+    description: "Permite qualquer participante ler informações sobre um lote.s"
+    participant: "info.foodways.*"
+    operation: READ
+    resource: "info.foodways.Lote"
+    action: ALLOW
+}
+
+rule DriverCanCreateGoodsReceipt {
+    description: "Permite caminhoneiros criarem recebimento de mercadorias."
+    participant: "info.foodways.Caminhoneiro"
+    operation: CREATE
+    resource: "info.foodways.Recebimento"
+    action: ALLOW
+}
+
+rule IndustryCanReadOwnShipments {
+    description: "Permite que as indústrias consigam enxergar os carregamento que sejam destinados a si próprios"
+    participant(i): "info.foodways.Industria"
+    operation: READ
+    resource(c): "info.foodways.Carregamento"
+    condition: (c.destino.getIdentifier() === i.getIdentifier())
+    action: ALLOW
+}
+
+rule IndustryFullAccessToOwnBatches {
+    description: "Permite que as indústrias tenham total controle sobre seus lotes."
+    participant(i): "info.foodways.Industria"
+    operation: ALL
+    resource(b): "info.foodways.Lote"
+    condition: (b.industria.getIdentifier() === i.getIdentifier())
+    action: ALLOW
+}
+
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
