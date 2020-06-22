@@ -1,3 +1,3 @@
 # foodways-network
 
-Food tracking system
+Food tracking system using Hyperledger Compose.
